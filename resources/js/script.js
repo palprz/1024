@@ -55,6 +55,8 @@ $( document ).ready( function () {
 		var randomTile = getRandomTile( emptyTiles );
 		var randomNumber = generateNumber();
 		$( '#tile' + emptyTiles[randomTile] ).append( randomNumber );
+		var coorArr = emptyTiles[randomTile].split( '' );
+		addTileColour( coorArr[0], coorArr[1] );
 	}
 	
 	/**
@@ -83,7 +85,7 @@ $( document ).ready( function () {
 	function isEmptyTile( i, j ) {
 		return $( '#tile' + i + j ).html() == '';
 	}
-	
+
 	/**
 	 * Get random index from array.
 	 * @param emptyTiles the array with empty tiles
@@ -102,7 +104,6 @@ $( document ).ready( function () {
 		return randomNumber > 8 ? 4 : 2;
 	}
 
-	
 	/*************************
 	 * HANDLE KEYS
 	 ************************/
@@ -183,7 +184,7 @@ $( document ).ready( function () {
 	}
 
 	/**
-	 * Move tile in table. Return if tile is empty.
+	 * Move tile in table. Do nothing if tile is empty.
 	 * @param i the current row
 	 * @param j the current column
 	 * @param moveRow the direction of row to move
@@ -205,8 +206,26 @@ $( document ).ready( function () {
 			//Clear previous tile
 			$( '#tile' + previousRow + previousColumn ).html( '' );
 			
+			//Change colours
+			addTileColour( nextRow, nextColumn );
+			addTileColour( previousRow, previousColumn );
+
 			nextRow = nextRow + moveRow;
 			nextColumn = nextColumn + moveColumn;
+		}
+	}
+	
+	/**
+	 * Change colour of tile.
+	 * Remove CSS class and add another one connected with value.
+	 * @param i the row
+	 * @param j the column
+	 */
+	function addTileColour( i, j ) {
+		$( '#tile' + i + j ).removeClass()
+		var tileValue = $( '#tile' + i + j ).html();
+		if ( !isEmptyTile( i, j ) ) {
+			$( '#tile' + i + j ).addClass( 'colour' + tileValue );
 		}
 	}
 	

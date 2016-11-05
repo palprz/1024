@@ -37,3 +37,47 @@ td {
 	text-align: center;
 	border: 1px solid grey;	
 }
+
+.colour2 {
+	background-color: #eee;
+}
+
+.colour4 {
+	background-color: #ddd;
+}
+
+.colour8 {
+	background-color: #ccc;	
+}
+
+.colour16 {
+	background-color: #bbb;	
+}
+
+.colour32 {
+	background-color: #aaa;
+}
+
+.colour64 {
+	background-color: #999;	
+}
+
+.colour128 {
+	background-color: #888;
+}
+
+.colour256 {
+	background-color: #777;	
+}
+
+.colour512 {
+	background-color: #666;
+}
+
+.colour1024 {
+	background-color: #555;	
+}
+
+.colour2048 {
+	background-color: #444;
+}
