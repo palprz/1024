@@ -15,6 +15,8 @@ $( document ).ready( function () {
 	 ************************/
 	
 	tableSize = 4; //default value
+	isDebugMode = false;
+	isRestoreMode = false;
 	
 	/*************************
 	 * INIT
@@ -28,11 +30,14 @@ $( document ).ready( function () {
 	function init() {
 		clearTiles();
 		createTiles();
-		
-		generateTile();
-		generateTile();
+		if ( isRestoreMode ) {
+			restoreData();
+		} else {			
+			generateTile();
+			generateTile();
+		}
 	}
-
+	
 	/**
 	 * Remove rows and columns from table.
 	 */
@@ -123,26 +128,29 @@ $( document ).ready( function () {
 	 */
 	$( document ).on( 'keydown', function( e ) { 
 		//used 'e.which' because it's better for jQuery -  'e.keyCode' is good for javascript
+		if ( isDebugMode ) {
+			logTiles( e );
+		}
+		
 		switch( e.which ) {
 			case 37: //left
 				moveLeft();
-				generateTile();
 				break;
 			case 38: //up
 				moveUp();
-				generateTile();
 				break;
 			case 39: //right
 				moveRight();
-				generateTile();
 				break;
 			case 40: //down
 				moveDown();
-				generateTile();
 				break;
 			default:
+				return;
 				break;
 		}
+
+		generateTile();
 	} )
 	
 	/**
@@ -213,7 +221,7 @@ $( document ).ready( function () {
 			currentColumn = nextColumn - moveColumn;
 			
 			//Move value from previous tile
-			$( '#tile' + nextRow + nextColumn ).append( $( '#tile' + currentRow + currentColumn ).html() );
+			$( '#tile' + nextRow + nextColumn ).html( $( '#tile' + currentRow + currentColumn ).html() );
 			//Clear current tile
 			$( '#tile' + currentRow + currentColumn ).empty( '' );
 			
@@ -259,6 +267,63 @@ $( document ).ready( function () {
 		if ( !isEmptyTile( i, j ) ) {
 			$( '#tile' + i + j ).addClass( 'colour' + tileValue );
 		}
+	}
+
+	/*************************
+	 * TEST TILES AND DEBUGGING
+	 ************************/
+	
+	function restoreData() {
+		var dataToRestore = '2;8;16;32;64;128;256;512;1024;2048;;;;;;';
+		var dataArray = dataToRestore.split( ';' );
+		var i = 0;
+		for( var row = 1; row <= tableSize; row++ ) {
+			for ( var column = 1; column <= tableSize; column++ ) {
+				$( '#tile' + row + column ).html( dataArray[ i ] );
+				addTileColour( row, column );
+				i++;
+			}
+		}
+	}
+
+	/**
+	 * Log value of tiles in table (copy from console and paste into restoreData() 
+	 * the whole log for restore the specific setting of table).
+	 * @param e the event from keyboard
+	 */
+	function logTiles( e ) {
+		var arrow = '';
+		switch( e.which ) {
+			case 37:
+				arrow = 'left';
+				break;
+			case 38:
+				arrow = 'up';
+				break;
+			case 39:
+				arrow = 'right';
+				break;
+			case 40:
+				arrow = 'down';
+				break;
+			default:
+				return;
+				break;
+		}
+		
+		var values = '';
+		for( var row = 1; row <= tableSize; row++ ) {
+			for( var column = 1; column <= tableSize; column++ ) {
+				var value = $( '#tile' + row + column).html();
+				coords += value + ';';
+			}
+		}
+		
+		//Values will be separate with ';'.
+		//Example: 2;8;32;;
+		//Value 2, value 8, value 32, empty value
+		console.log( 'logTiles( arrow: ' + arrow + ' ): ' );
+		console.log( values );
 	}
 	
 } )
