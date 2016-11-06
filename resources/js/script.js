@@ -2,7 +2,6 @@ $( document ).ready( function () {
 
 	/**
 	 * TODO list with order:
-	 * - Change 'i' and 'j' to 'row' and 'column' in move methods - retest it.
 	 * - Add possible to merge more than two tiles in the row (e.g. 4,4,2,2 -> 8,4. For now it's: 8,2,2).
 	 * - Add end of game - check empty tiles and possible of merge tiles.
 	 * - Spend more time on game and fix bugs.
@@ -151,9 +150,9 @@ $( document ).ready( function () {
 	 * The only different between 'moveLeft/Up/Right/Down' methods is other order of checking tiles in table.
 	 */
 	function moveLeft() {
-		for ( var i = 1; i <= tableSize; i++ ) {
-			for ( var j = 1; j <= tableSize; j++ ) {
-				moveTile( i, j, 0, -1 );
+		for ( var row = 1; row <= tableSize; row++ ) {
+			for ( var column = 1; column <= tableSize; column++ ) {
+				moveTile( row, column, 0, -1 );
 			}
 		}
 	}
@@ -163,9 +162,9 @@ $( document ).ready( function () {
 	 * The only different between 'moveLeft/Up/Right/Down' methods is other order of checking tiles in table.
 	 */
 	function moveUp() {
-		for ( var j = 1; j <= tableSize; j++ ) {
-			for ( var i = 1; i <= tableSize; i++ ) {
-				moveTile( i, j, -1, 0 );
+		for ( var column = 1; column <= tableSize; column++ ) {
+			for ( var row = 1; row <= tableSize; row++ ) {
+				moveTile( row, column, -1, 0 );
 			}
 		}			
 	}
@@ -175,9 +174,9 @@ $( document ).ready( function () {
 	 * The only different between 'moveLeft/Up/Right/Down' methods is other order of checking tiles in table.
 	 */
 	function moveRight() {
-		for ( var i = tableSize; i >= 1; i-- ) {
-			for ( var j = tableSize; j >= 1; j-- ) {
-				moveTile( i, j, 0, 1 );
+		for ( var row = tableSize; row >= 1; row-- ) {
+			for ( var column = tableSize; column >= 1; column-- ) {
+				moveTile( row, column, 0, 1 );
 			}
 		}
 	}
@@ -187,9 +186,9 @@ $( document ).ready( function () {
 	 * The only different between 'moveLeft/Up/Right/Down' methods is other order of checking tiles in table.
 	 */
 	function moveDown() {
-		for ( var j = tableSize; j >= 1; j-- ) {
-			for ( var i = tableSize; i >= 1; i-- ) {
-				moveTile( i, j, 1, 0 );
+		for ( var column = tableSize; column >= 1; column-- ) {
+			for ( var row = tableSize; row >= 1; row-- ) {
+				moveTile( row, column, 1, 0 );
 			}
 		}
 	}
@@ -255,7 +254,7 @@ $( document ).ready( function () {
 	 * @param j the column
 	 */
 	function addTileColour( i, j ) {
-		$( '#tile' + i + j ).removeClass()
+		$( '#tile' + i + j ).removeClass();
 		var tileValue = $( '#tile' + i + j ).html();
 		if ( !isEmptyTile( i, j ) ) {
 			$( '#tile' + i + j ).addClass( 'colour' + tileValue );
