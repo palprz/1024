@@ -1,5 +1,16 @@
 $( document ).ready( function () {
 
+	/**
+	 * TODO list with order:
+	 * - Change 'i' and 'j' to 'row' and 'column' in move methods - retest it.
+	 * - Add possible to merge more than two tiles in the row (e.g. 4,4,2,2 -> 8,4. For now it's: 8,2,2).
+	 * - Add end of game - check empty tiles and possible of merge tiles.
+	 * - Spend more time on game and fix bugs.
+	 * - Add score.
+	 * - Configuration for smaller and bigger versions.
+	 * - Change CSS.
+	 */
+	
 	/*************************
 	 * CONFIGURATION
 	 ************************/
@@ -27,7 +38,7 @@ $( document ).ready( function () {
 	 * Remove rows and columns from table.
 	 */
 	function clearTiles() {
-		$( 'table' ).html( '' );
+		$( 'table' ).empty();
 	}
 	
 	/**
@@ -191,27 +202,49 @@ $( document ).ready( function () {
 	 * @param moveColumn the direction of column to move
 	 */
 	function moveTile( i, j, moveRow, moveColumn ) {
-		if ( isEmptyTile( i, j) ) {
+		if ( isEmptyTile( i, j ) ) {
 			return;
 		}
-		
 		var nextRow = i + moveRow;
 		var nextColumn = j + moveColumn;
+		var previousRow;
+		var previousColumn;
 		while( isEmptyTile( nextRow, nextColumn ) ) {
-			var previousRow = nextRow - moveRow;
-			var previousColumn = nextColumn - moveColumn;
+			currentRow = nextRow - moveRow;
+			currentColumn = nextColumn - moveColumn;
 			
 			//Move value from previous tile
-			$( '#tile' + nextRow + nextColumn ).append( $( '#tile' + previousRow + previousColumn ).html() );
-			//Clear previous tile
-			$( '#tile' + previousRow + previousColumn ).html( '' );
+			$( '#tile' + nextRow + nextColumn ).append( $( '#tile' + currentRow + currentColumn ).html() );
+			//Clear current tile
+			$( '#tile' + currentRow + currentColumn ).empty( '' );
 			
 			//Change colours
 			addTileColour( nextRow, nextColumn );
-			addTileColour( previousRow, previousColumn );
+			addTileColour( currentRow, currentColumn );
 
 			nextRow = nextRow + moveRow;
 			nextColumn = nextColumn + moveColumn;
+		}
+
+		mergeTiles( nextRow - moveRow, nextColumn - moveColumn, nextRow, nextColumn );
+	}
+	
+	/**
+	 * Check if current and next tiles contain the same value and merge them.
+	 * @param currentRow the current row
+	 * @param currentColumn the current column
+	 * @param nextRow the next row
+	 * @param nextColumn the next column
+	 */
+	function mergeTiles( currentRow, currentColumn, nextRow, nextColumn ) {
+		var nextValue = $( '#tile' + nextRow + nextColumn ).html();
+		var currentValue = $( '#tile' + currentRow + currentColumn ).html();
+		if( nextValue == currentValue ) {
+			$( '#tile' + nextRow + nextColumn ).html( parseInt( nextValue ) * 2 );
+			$( '#tile' + currentRow + currentColumn ).empty();
+
+			addTileColour( nextRow, nextColumn );
+			addTileColour( currentRow, currentColumn );
 		}
 	}
 	
