@@ -2,7 +2,6 @@ $( document ).ready( function () {
 
 	/**
 	 * TODO list with order:
-	 * - Add possible to merge more than two tiles in the row (e.g. 4,4,2,2 -> 8,4. For now it's: 8,2,2).
 	 * - Add end of game - check empty tiles and possible of merge tiles.
 	 * - Spend more time on game and fix bugs.
 	 * - Add score.
@@ -17,6 +16,12 @@ $( document ).ready( function () {
 	tableSize = 4; //default value
 	isDebugMode = false;
 	isRestoreMode = false;
+
+	/*************************
+	 * GLOBAL VARIABLES;
+	 ************************/
+	
+	isChanged = false;
 	
 	/*************************
 	 * INIT
@@ -124,7 +129,7 @@ $( document ).ready( function () {
 	 ************************/
 
 	/**
-	 * Move tiles and generate another one tile.
+	 * Move tiles and generate another one tile if something changed in table.
 	 */
 	$( document ).on( 'keydown', function( e ) { 
 		//used 'e.which' because it's better for jQuery -  'e.keyCode' is good for javascript
@@ -132,6 +137,7 @@ $( document ).ready( function () {
 			logTiles( e );
 		}
 		
+		isChanged = false;
 		switch( e.which ) {
 			case 37: //left
 				moveLeft();
@@ -149,8 +155,10 @@ $( document ).ready( function () {
 				return;
 				break;
 		}
-
-		generateTile();
+		
+		if ( isChanged ) {
+			generateTile();
+		}
 	} )
 	
 	/**
@@ -174,7 +182,7 @@ $( document ).ready( function () {
 			for ( var row = 1; row <= tableSize; row++ ) {
 				moveTile( row, column, -1, 0 );
 			}
-		}			
+		}
 	}
 
 	/**
@@ -210,12 +218,11 @@ $( document ).ready( function () {
 	 */
 	function moveTile( i, j, moveRow, moveColumn ) {
 		if ( isEmptyTile( i, j ) ) {
-			return;
+			return false;
 		}
 		var nextRow = i + moveRow;
 		var nextColumn = j + moveColumn;
-		var previousRow;
-		var previousColumn;
+		var previousRow, previousColumn;
 		while( isEmptyTile( nextRow, nextColumn ) ) {
 			currentRow = nextRow - moveRow;
 			currentColumn = nextColumn - moveColumn;
@@ -231,8 +238,8 @@ $( document ).ready( function () {
 
 			nextRow = nextRow + moveRow;
 			nextColumn = nextColumn + moveColumn;
+			isChanged = true;
 		}
-
 		mergeTiles( nextRow - moveRow, nextColumn - moveColumn, nextRow, nextColumn );
 	}
 	
@@ -252,6 +259,7 @@ $( document ).ready( function () {
 
 			addTileColour( nextRow, nextColumn );
 			addTileColour( currentRow, currentColumn );
+			isChanged = true;
 		}
 	}
 	
@@ -315,7 +323,7 @@ $( document ).ready( function () {
 		for( var row = 1; row <= tableSize; row++ ) {
 			for( var column = 1; column <= tableSize; column++ ) {
 				var value = $( '#tile' + row + column).html();
-				coords += value + ';';
+				values += value + ';';
 			}
 		}
 		
@@ -323,7 +331,7 @@ $( document ).ready( function () {
 		//Example: 2;8;32;;
 		//Value 2, value 8, value 32, empty value
 		console.log( 'logTiles( arrow: ' + arrow + ' ): ' );
-		console.log( values );
+		console.log( 'var dataToRestore = "' + values + '";' );
 	}
 	
 } )
