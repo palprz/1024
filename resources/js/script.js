@@ -2,7 +2,6 @@ $( document ).ready( function () {
 
 	/**
 	 * TODO list with order:
-	 * - Add end of game - check empty tiles and possible of merge tiles.
 	 * - Spend more time on game and fix bugs.
 	 * - Add score.
 	 * - Configuration for smaller and bigger versions.
@@ -35,7 +34,7 @@ $( document ).ready( function () {
 	function init() {
 		clearTiles();
 		createTiles();
-		if ( isRestoreMode ) {
+		if( isRestoreMode ) {
 			restoreData();
 		} else {			
 			generateTile();
@@ -86,7 +85,7 @@ $( document ).ready( function () {
 	function getEmptyTiles() {
 		var availableTiles = new Array();
 		for( var i = 1; i <= tableSize; i++ ) {
-			for ( var j = 1; j <= tableSize; j++ ) {
+			for( var j = 1; j <= tableSize; j++ ) {
 				if( isEmptyTile( i, j ) ) {
 					availableTiles.push( '' + i + j );
 				}
@@ -133,7 +132,7 @@ $( document ).ready( function () {
 	 */
 	$( document ).on( 'keydown', function( e ) { 
 		//used 'e.which' because it's better for jQuery -  'e.keyCode' is good for javascript
-		if ( isDebugMode ) {
+		if( isDebugMode ) {
 			logTiles( e );
 		}
 		
@@ -156,8 +155,11 @@ $( document ).ready( function () {
 				break;
 		}
 		
-		if ( isChanged ) {
+		if( isChanged ) {
 			generateTile();
+			if( isEndGame() ) {
+				$( 'footer' ).append( '<p>You don\'t have available move.</p>' );
+			}
 		}
 	} )
 	
@@ -166,8 +168,8 @@ $( document ).ready( function () {
 	 * The only different between 'moveLeft/Up/Right/Down' methods is other order of checking tiles in table.
 	 */
 	function moveLeft() {
-		for ( var row = 1; row <= tableSize; row++ ) {
-			for ( var column = 1; column <= tableSize; column++ ) {
+		for( var row = 1; row <= tableSize; row++ ) {
+			for( var column = 1; column <= tableSize; column++ ) {
 				moveTile( row, column, 0, -1 );
 			}
 		}
@@ -178,8 +180,8 @@ $( document ).ready( function () {
 	 * The only different between 'moveLeft/Up/Right/Down' methods is other order of checking tiles in table.
 	 */
 	function moveUp() {
-		for ( var column = 1; column <= tableSize; column++ ) {
-			for ( var row = 1; row <= tableSize; row++ ) {
+		for( var column = 1; column <= tableSize; column++ ) {
+			for( var row = 1; row <= tableSize; row++ ) {
 				moveTile( row, column, -1, 0 );
 			}
 		}
@@ -190,8 +192,8 @@ $( document ).ready( function () {
 	 * The only different between 'moveLeft/Up/Right/Down' methods is other order of checking tiles in table.
 	 */
 	function moveRight() {
-		for ( var row = tableSize; row >= 1; row-- ) {
-			for ( var column = tableSize; column >= 1; column-- ) {
+		for( var row = tableSize; row >= 1; row-- ) {
+			for( var column = tableSize; column >= 1; column-- ) {
 				moveTile( row, column, 0, 1 );
 			}
 		}
@@ -202,8 +204,8 @@ $( document ).ready( function () {
 	 * The only different between 'moveLeft/Up/Right/Down' methods is other order of checking tiles in table.
 	 */
 	function moveDown() {
-		for ( var column = tableSize; column >= 1; column-- ) {
-			for ( var row = tableSize; row >= 1; row-- ) {
+		for( var column = tableSize; column >= 1; column-- ) {
+			for( var row = tableSize; row >= 1; row-- ) {
 				moveTile( row, column, 1, 0 );
 			}
 		}
@@ -217,7 +219,7 @@ $( document ).ready( function () {
 	 * @param moveColumn the direction of column to move
 	 */
 	function moveTile( i, j, moveRow, moveColumn ) {
-		if ( isEmptyTile( i, j ) ) {
+		if( isEmptyTile( i, j ) ) {
 			return false;
 		}
 		var nextRow = i + moveRow;
@@ -272,11 +274,56 @@ $( document ).ready( function () {
 	function addTileColour( i, j ) {
 		$( '#tile' + i + j ).removeClass();
 		var tileValue = $( '#tile' + i + j ).html();
-		if ( !isEmptyTile( i, j ) ) {
+		if( !isEmptyTile( i, j ) ) {
 			$( '#tile' + i + j ).addClass( 'colour' + tileValue );
 		}
 	}
 
+	/**
+	 * Check if table has got empty tiles and it's possible to merge tiles.
+	 * If table contains empty tiles or is possible to merge tiles - return false.
+	 * @returns boolean value
+	 */
+	function isEndGame() {
+		if( getEmptyTiles().length != 0 ) {
+			return false;
+		} 
+
+		for( var row = 1; row <= tableSize; row++ ) {
+			for( var column = 1; column <= tableSize; column++ ) {
+				if( isPossibleMerge( row, column ) ) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Check if is possible to merge tiles in table.
+	 * @param row the row of tile to check
+	 * @param column the column of tile to check
+	 * @returns boolean value
+	 */
+	function isPossibleMerge( row, column ) {
+		var centerVal = $( '#tile' + row + column ).html();
+		return $.inArray( centerVal, getNextValues( row, column ) ) != -1;
+	}
+	
+	/**
+	 * Get value from tiles around checking value.
+	 * @param row the row of tile to check
+	 * @param column the column of tile to check
+	 * @returns array with values
+	 */
+	function getNextValues( row, column ) {
+		var leftVal = $( '#tile' + row + parseInt( column - 1 ) ).html();
+		var upVal = $( '#tile' + parseInt( row - 1 ) + column ).html();
+		var rightVal = $( '#tile' + row + parseInt( column + 1 ) ).html();
+		var downVal = $( '#tile' + parseInt( row + 1 ) + column ).html();
+		return new Array( leftVal, upVal, rightVal, downVal );
+	}
+	
 	/*************************
 	 * TEST TILES AND DEBUGGING
 	 ************************/
@@ -286,7 +333,7 @@ $( document ).ready( function () {
 		var dataArray = dataToRestore.split( ';' );
 		var i = 0;
 		for( var row = 1; row <= tableSize; row++ ) {
-			for ( var column = 1; column <= tableSize; column++ ) {
+			for( var column = 1; column <= tableSize; column++ ) {
 				$( '#tile' + row + column ).html( dataArray[ i ] );
 				addTileColour( row, column );
 				i++;
