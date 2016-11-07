@@ -2,9 +2,11 @@ $( document ).ready( function () {
 
 	/**
 	 * TODO list with order:
+	 * - Refactor isEndGame for get better performance (create array with values - not: everytime get value from HTML).
+	 * - Add arrows for mobile version and configuration for that (checkbox?).
 	 * - Configuration for smaller and bigger versions.
+	 * - Add correct CSS (only for mobile version).
 	 * - Spend more time on game and fix bugs.
-	 * - Change CSS.
 	 */
 	
 	/*************************
