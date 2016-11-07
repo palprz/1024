@@ -1,42 +1,36 @@
-/* Create everything once again - just for testing */
-
 body {
-	width: 40em;
 	margin: 0 auto;
 	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 header {
-	background-color: #EEE;
+	min-width: 40em;
 	height: 4em;
-	font-weight: bold;
 	line-height: 4em;
+    background: #eee; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient( #eee, #fff ); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient( #eee, #fff ); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient( #eee, #fff ); /* For Firefox 3.6 to 15 */
+    background: linear-gradient( #eee, #fff ); /* Standard syntax (must be last) */
 }
 
 #title {
 	float: left;
-	width: 40%;
-	font-size: 24px;
+	width: 30%;
+	font-size: 32px;
+	font-weight: bold;
 }
 
 #score {
 	float: right;
-	width: 60%;
+	width: 70%;
 	font-size: 16px;
 }
 
-#currentScore {
+#currentScore, #bestScore {
 	color: red;
-}
-
-#bestScore {
-	color: red;
-}
-
-footer {
-	background-color: #EEE;
-	height: 2.5em;
-	line-height: 2.5em;
+	font-weight: bold;
 }
 
 section {
@@ -45,58 +39,27 @@ section {
 
 table {
 	font-size: 32px;
-	border: 5px solid black;
-	padding: 5px;
 	margin: 0 auto;
+	background-color: #6C541E;
+	border-spacing: 0.2em;
 }
 
 td {
 	width: 2.5em; 
 	height: 2.5em;
-	text-align: center;
-	border: 1px solid grey;	
+	border: 0.05em solid #888;
+	background-color: #DCD7D4;
 }
 
-.colour2 {
-	background-color: #eee;
-}
-
-.colour4 {
-	background-color: #ddd;
-}
-
-.colour8 {
-	background-color: #ccc;	
-}
-
-.colour16 {
-	background-color: #bbb;	
-}
-
-.colour32 {
-	background-color: #aaa;
-}
-
-.colour64 {
-	background-color: #999;	
-}
-
-.colour128 {
-	background-color: #888;
-}
-
-.colour256 {
-	background-color: #777;	
-}
-
-.colour512 {
-	background-color: #666;
-}
-
-.colour1024 {
-	background-color: #555;	
-}
-
-.colour2048 {
-	background-color: #444;
-}
+.colour2 { background-color: #FFF; color: #000; }
+.colour4 { background-color: #FFFF99; color: #000; }
+.colour8 { background-color: #FFBF00; color: #000; }
+.colour16 {	background-color: #FF7F50; color: #000;	}
+.colour32 { background-color: #FF4040;  color: #000; }
+.colour64 {	background-color: #FF0800; color: #000;	}
+.colour128 { background-color: #C154C1; color: #000; }
+.colour256 { background-color: #B53389; color: #000; }
+.colour512 { background-color: #A57164; color: #000; }
+.colour1024 { background-color: #555D50; color: #000; }
+.colour2048 { background-color: #003399; color: #000; }
+.colour4096, .colour8192, .colour16384, .colour32768, .colour65536 { background-color: #000; color: #fff; }
