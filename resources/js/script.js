@@ -5,7 +5,11 @@ $( document ).ready( function () {
 	 * - Refactor isEndGame for get better performance (create array with values - not: everytime get value from HTML).
 	 * - Add arrows for mobile version and configuration for that (checkbox?).
 	 * - Configuration for smaller and bigger versions.
-	 * - Add correct CSS (only for mobile version).
+	 * - Add correct CSS (only for mobile version):
+	 * - add div-container for header
+	 * - add classes .small, .medium and .big for table (different size of 'td' elements).
+	 * - remove buttons and add divs
+	 * - add link to github and portfolio page in the footer
 	 * - Spend more time on game and fix bugs.
 	 */
 	
