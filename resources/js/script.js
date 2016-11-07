@@ -2,9 +2,8 @@ $( document ).ready( function () {
 
 	/**
 	 * TODO list with order:
-	 * - Spend more time on game and fix bugs.
-	 * - Add score.
 	 * - Configuration for smaller and bigger versions.
+	 * - Spend more time on game and fix bugs.
 	 * - Change CSS.
 	 */
 	
@@ -21,6 +20,8 @@ $( document ).ready( function () {
 	 ************************/
 	
 	isChanged = false;
+	currentScore = 0;
+	bestScore = 0;
 	
 	/*************************
 	 * INIT
@@ -32,6 +33,7 @@ $( document ).ready( function () {
 	 * Init application.
 	 */
 	function init() {
+		clearCurrentScore();
 		clearTiles();
 		createTiles();
 		if( isRestoreMode ) {
@@ -124,6 +126,39 @@ $( document ).ready( function () {
 	}
 
 	/*************************
+	 * HANDLE CONFIGURATION, EVENTS, SCORE
+	 ************************/
+	
+	/**
+	 * Clear message text and init application once again.
+	 */
+	$( '#reset' ).on( 'click', function( e ) {
+		$( '#message' ).empty();
+		init();
+	} )
+
+	/**
+	 * Reset value for current score.
+	 */
+	function clearCurrentScore() {
+		currentScore = 0;
+		$( '#currentScore' ).html( '0' );
+	}
+	
+	/**
+	 * Set current score.
+	 * @param currentScoreVal the current score value to set
+	 */
+	function addCurrentScore( currentScoreVal ) {
+		currentScore = parseInt( currentScore ) + parseInt ( currentScoreVal );
+		$( '#currentScore' ).empty().text( currentScore );
+		if ( currentScore > bestScore ) {
+			bestScore = currentScore;
+			$( '#bestScore' ).empty().text( currentScore );
+		}
+	}
+	
+	/*************************
 	 * HANDLE KEYS
 	 ************************/
 
@@ -158,7 +193,7 @@ $( document ).ready( function () {
 		if( isChanged ) {
 			generateTile();
 			if( isEndGame() ) {
-				$( 'footer' ).append( '<p>You don\'t have available move.</p>' );
+				$( '#message' ).html( 'You don\'t have available move.' );
 			}
 		}
 	} )
@@ -256,11 +291,12 @@ $( document ).ready( function () {
 		var nextValue = $( '#tile' + nextRow + nextColumn ).html();
 		var currentValue = $( '#tile' + currentRow + currentColumn ).html();
 		if( nextValue == currentValue ) {
-			$( '#tile' + nextRow + nextColumn ).html( parseInt( nextValue ) * 2 );
+			var valueAfterMerge = $( '#tile' + nextRow + nextColumn ).html( parseInt( nextValue ) * 2 ).html();
 			$( '#tile' + currentRow + currentColumn ).empty();
 
 			addTileColour( nextRow, nextColumn );
 			addTileColour( currentRow, currentColumn );
+			addCurrentScore( valueAfterMerge );
 			isChanged = true;
 		}
 	}

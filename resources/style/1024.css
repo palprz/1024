@@ -9,9 +9,28 @@ body {
 header {
 	background-color: #EEE;
 	height: 4em;
-	font-size: 24px;
 	font-weight: bold;
 	line-height: 4em;
+}
+
+#title {
+	float: left;
+	width: 40%;
+	font-size: 24px;
+}
+
+#score {
+	float: right;
+	width: 60%;
+	font-size: 16px;
+}
+
+#currentScore {
+	color: red;
+}
+
+#bestScore {
+	color: red;
 }
 
 footer {
