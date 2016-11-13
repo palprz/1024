@@ -7,7 +7,6 @@
     <meta name="description" content="Project 1024 made by Przemyslaw Paluch">
     <meta name="keywords" content="przemyslaw, paluch, bristol, software, enginner, github, 1024 />
     <meta name="author" content="Przemyslaw Paluch">
-<!--     <link rel="shortcut icon" href="./resources/images/my-page-icon.ico"> TODO -->
     <link href="./resources/style/1024.css" rel="stylesheet">
     <script src="./resources/lib/jquery-1.12.3.min.js"></script>
     <script src="./resources/js/script.js"></script>
@@ -15,17 +14,22 @@
 </head>
 <body>
 	<header>
-		<div id="title">1024</div>
-		<div id="score">Your score: <span id="currentScore">0</span> | Best score for this session: <span id="bestScore">0</span></div>
+		<div class="header-container">
+			<div class="title">1024</div>
+			<div class="score">Your score: <span class="currentScore">0</span> | Best score for this session: <span class="bestScore">0</span></div>
+		</div>
 	</header>
-	<section>
+	<section id="table">
 		<table>
 		
 		</table>
 	</section>
 	<section>
-		<button id="reset" >Reset game</button>
-		<p id="message"></p>
+		<div class="reset button">Reset game</div>
+		<div class="size button" value="3">Create small game (3x3)</div>
+		<div class="size button" value="4">Create medium game (4x4)</div>
+		<div class="size button" value="5">Create large game (5x5)</div>
+		<div class="message"></div>
 	</section>
 	<footer>
 		Copyright @ Przemyslaw Paluch, 2016

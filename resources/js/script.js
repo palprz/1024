@@ -2,12 +2,8 @@ $( document ).ready( function () {
 
 	/**
 	 * TODO list with order:
-	 * - Add arrows for mobile version and configuration for that (checkbox?).
-	 * - Configuration for smaller and bigger versions.
 	 * - Add correct CSS (only for mobile version):
-	 * 		- add div-container for header
 	 * 		- add classes .small, .medium and .big for table (different size of 'td' elements).
-	 * 		- remove buttons and add divs
 	 * - add link to github and portfolio page in the footer
 	 * - Spend more time on game and fix bugs.
 	 */
@@ -173,17 +169,28 @@ $( document ).ready( function () {
 	/**
 	 * Clear message text and init application once again.
 	 */
-	$( '#reset' ).on( 'click', function( e ) {
-		$( '#message' ).empty();
+	$( '.reset' ).on( 'click', function( e ) {
+		$( '.message' ).empty();
 		init();
 	} )
 
+	/**
+	 * Change table size to small/medium/large (3x3/4x4/5x5) and init game.
+	 */
+	$( '.size' ).on( 'click', function( e ) {
+		if( confirm( 'Are you sure to change size of table? Table needs to be reload and you will lose your current game' ) ) {
+			tableSize = $( this ).attr( 'value' );
+			$( '.message' ).empty();
+			init();	
+		}
+	} )
+	
 	/**
 	 * Reset value for current score.
 	 */
 	function clearCurrentScore() {
 		currentScore = 0;
-		$( '#currentScore' ).html( '0' );
+		$( '.currentScore' ).html( '0' );
 	}
 	
 	/**
@@ -192,10 +199,10 @@ $( document ).ready( function () {
 	 */
 	function addCurrentScore( currentScoreVal ) {
 		currentScore = parseInt( currentScore ) + parseInt ( currentScoreVal );
-		$( '#currentScore' ).empty().text( currentScore );
+		$( '.currentScore' ).empty().text( currentScore );
 		if ( currentScore > bestScore ) {
 			bestScore = currentScore;
-			$( '#bestScore' ).empty().text( currentScore );
+			$( '.bestScore' ).empty().text( currentScore );
 		}
 	}
 	
@@ -235,7 +242,7 @@ $( document ).ready( function () {
 			generateTile();
 			if( isEndGame() ) {
 				refreshHTML();
-				$( '#message' ).html( 'You don\'t have available move.' );
+				$( '.message' ).html( 'You don\'t have available move.' );
 			}
 		}
 		refreshHTML();

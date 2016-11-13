@@ -15,20 +15,26 @@ header {
     background: linear-gradient( #eee, #fff ); /* Standard syntax (must be last) */
 }
 
-#title {
+.header-container {
+	max-width: 30em;
+	margin: 0 auto;
+}
+
+.title {
 	float: left;
+	text-align: left;
 	width: 30%;
 	font-size: 32px;
 	font-weight: bold;
 }
 
-#score {
+.score {
 	float: right;
 	width: 70%;
 	font-size: 16px;
 }
 
-#currentScore, #bestScore {
+.currentScore, .bestScore {
 	color: red;
 	font-weight: bold;
 }
@@ -63,3 +69,18 @@ td {
 .colour1024 { background-color: #555D50; color: #000; }
 .colour2048 { background-color: #003399; color: #000; }
 .colour4096, .colour8192, .colour16384, .colour32768, .colour65536 { background-color: #000; color: #fff; }
+
+
+.button {
+	background-color: #eee;
+	padding: 0.5em 1em;
+	width: 15em;
+	margin: 0 auto;
+	margin-top: 1em;
+}
+
+.button:hover {
+	background-color: #aaa;
+	color: #fff;
+	cursor: pointer;
+}
