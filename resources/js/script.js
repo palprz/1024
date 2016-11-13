@@ -2,13 +2,12 @@ $( document ).ready( function () {
 
 	/**
 	 * TODO list with order:
-	 * - Refactor isEndGame for get better performance (create array with values - not: everytime get value from HTML).
 	 * - Add arrows for mobile version and configuration for that (checkbox?).
 	 * - Configuration for smaller and bigger versions.
 	 * - Add correct CSS (only for mobile version):
-	 * - add div-container for header
-	 * - add classes .small, .medium and .big for table (different size of 'td' elements).
-	 * - remove buttons and add divs
+	 * 		- add div-container for header
+	 * 		- add classes .small, .medium and .big for table (different size of 'td' elements).
+	 * 		- remove buttons and add divs
 	 * - add link to github and portfolio page in the footer
 	 * - Spend more time on game and fix bugs.
 	 */
@@ -17,7 +16,8 @@ $( document ).ready( function () {
 	 * CONFIGURATION
 	 ************************/
 	
-	tableSize = 4; //default value
+	tableSize = 4; 			//default value
+	table = [];				//table with coordinates and values
 	isDebugMode = false;
 	isRestoreMode = false;
 
@@ -40,32 +40,46 @@ $( document ).ready( function () {
 	 */
 	function init() {
 		clearCurrentScore();
-		clearTiles();
-		createTiles();
+		clearTable();
+		clearHTMLTiles();
+		createHTMLTiles();
 		if( isRestoreMode ) {
 			restoreData();
 		} else {			
 			generateTile();
 			generateTile();
 		}
+		refreshHTML();
 	}
 	
 	/**
-	 * Remove rows and columns from table.
+	 * Clear values from table array.
 	 */
-	function clearTiles() {
+	function clearTable() {
+		for( var row = 1; row <= tableSize; row++ ) {
+			table[ row ] = [];
+			for( var column = 1; column <= tableSize; column++ ) {
+				table[ row ][ column ] = null;
+			}
+		}
+	}
+	
+	/**
+	 * Remove rows and columns from HTML table.
+	 */
+	function clearHTMLTiles() {
 		$( 'table' ).empty();
 	}
 	
 	/**
-	 * Create rows and columns in table with using configuration.
+	 * Create rows and columns in HTML table with using configuration.
 	 */
-	function createTiles() {
+	function createHTMLTiles() {
 		tilesHTML = '';
-		for( var i = 1; i <= tableSize; i++ ) {
+		for( var row = 1; row <= tableSize; row++ ) {
 			tilesHTML += '<tr>';
-			for(var j = 1; j <= tableSize; j++ ) {
-				tilesHTML += '<td id="tile' + i + j + '"></td>';
+			for(var column = 1; column <= tableSize; column++ ) {
+				tilesHTML += '<td id="tile' + row + column + '"></td>';
 			}
 			
 			tilesHTML += '</tr>';
@@ -81,9 +95,8 @@ $( document ).ready( function () {
 		var emptyTiles = getEmptyTiles();
 		var randomTile = getRandomTile( emptyTiles );
 		var randomNumber = generateNumber();
-		$( '#tile' + emptyTiles[randomTile] ).append( randomNumber );
 		var coorArr = emptyTiles[randomTile].split( '' );
-		addTileColour( coorArr[0], coorArr[1] );
+		table[ coorArr[ 0 ] ][ coorArr[ 1 ] ] = randomNumber;
 	}
 	
 	/**
@@ -91,11 +104,11 @@ $( document ).ready( function () {
 	 * @returns array with empty tiles
 	 */
 	function getEmptyTiles() {
-		var availableTiles = new Array();
-		for( var i = 1; i <= tableSize; i++ ) {
-			for( var j = 1; j <= tableSize; j++ ) {
-				if( isEmptyTile( i, j ) ) {
-					availableTiles.push( '' + i + j );
+		var availableTiles = [];
+		for( var row = 1; row <= tableSize; row++ ) {
+			for( var column = 1; column <= tableSize; column++ ) {
+				if( isEmptyTile( row, column) ) {
+					availableTiles.push( '' + row + column );
 				}
 			}
 		}
@@ -105,12 +118,18 @@ $( document ).ready( function () {
 	
 	/**
 	 * Check if tile with coordinates is empty.
-	 * @param i the column
-	 * @param j the row
+	 * Cases for 4x4 table: 
+	 * - row is not undefined (0 and 5 rows are) - cases during merge tiles
+	 * - tile is null
+	 * - tile is not undefined (0 and 5 column are) - cases during merge tiles
+	 * @param row the column
+	 * @param column the row
 	 * @returns boolean value
 	 */
-	function isEmptyTile( i, j ) {
-		return $( '#tile' + i + j ).html() == '';
+	function isEmptyTile( row, column ) {
+		return table[ row ] !== undefined 
+			&& table[ row ][ column ] === null 
+			&& table[ row ][ column ] !== undefined;
 	}
 
 	/**
@@ -129,6 +148,22 @@ $( document ).ready( function () {
 	function generateNumber() {
 		var randomNumber = Math.floor( ( Math.random() * 10 ) + 1 );
 		return randomNumber > 8 ? 4 : 2;
+	}
+	
+	/**
+	 * Get values from table object in javascript and put them into HTML table element.
+	 */
+	function refreshHTML() {
+		for( var row = 1; row <= tableSize; row++ ) {
+			for( var column = 1; column <= tableSize; column++ ) {
+				if( isEmptyTile( row, column ) ) {
+					$( '#tile' + row + column ).empty();
+				} else {
+					$( '#tile' + row + column ).empty().text( table[ row ][ column ] );
+				}
+				addTileColour( row, column );
+			}
+		}
 	}
 
 	/*************************
@@ -172,11 +207,11 @@ $( document ).ready( function () {
 	 * Move tiles and generate another one tile if something changed in table.
 	 */
 	$( document ).on( 'keydown', function( e ) { 
-		//used 'e.which' because it's better for jQuery -  'e.keyCode' is good for javascript
 		if( isDebugMode ) {
 			logTiles( e );
 		}
-		
+
+		//used 'e.which' because it's better for jQuery -  'e.keyCode' is good for javascript
 		isChanged = false;
 		switch( e.which ) {
 			case 37: //left
@@ -199,9 +234,11 @@ $( document ).ready( function () {
 		if( isChanged ) {
 			generateTile();
 			if( isEndGame() ) {
+				refreshHTML();
 				$( '#message' ).html( 'You don\'t have available move.' );
 			}
 		}
+		refreshHTML();
 	} )
 	
 	/**
@@ -259,30 +296,28 @@ $( document ).ready( function () {
 	 * @param moveRow the direction of row to move
 	 * @param moveColumn the direction of column to move
 	 */
-	function moveTile( i, j, moveRow, moveColumn ) {
-		if( isEmptyTile( i, j ) ) {
+	function moveTile( currentRow, currentColumn, moveRow, moveColumn ) {
+		if( isEmptyTile( currentRow, currentColumn ) ) {
 			return false;
 		}
-		var nextRow = i + moveRow;
-		var nextColumn = j + moveColumn;
+		
+		var nextRow = currentRow + moveRow;
+		var nextColumn = currentColumn + moveColumn;
 		var previousRow, previousColumn;
 		while( isEmptyTile( nextRow, nextColumn ) ) {
 			currentRow = nextRow - moveRow;
 			currentColumn = nextColumn - moveColumn;
-			
+
 			//Move value from previous tile
-			$( '#tile' + nextRow + nextColumn ).html( $( '#tile' + currentRow + currentColumn ).html() );
+			table[ nextRow ][ nextColumn ] = table[ currentRow ][ currentColumn ];
 			//Clear current tile
-			$( '#tile' + currentRow + currentColumn ).empty( '' );
-			
-			//Change colours
-			addTileColour( nextRow, nextColumn );
-			addTileColour( currentRow, currentColumn );
+			table[ currentRow ][ currentColumn ] = null;
 
 			nextRow = nextRow + moveRow;
 			nextColumn = nextColumn + moveColumn;
 			isChanged = true;
 		}
+
 		mergeTiles( nextRow - moveRow, nextColumn - moveColumn, nextRow, nextColumn );
 	}
 	
@@ -294,14 +329,13 @@ $( document ).ready( function () {
 	 * @param nextColumn the next column
 	 */
 	function mergeTiles( currentRow, currentColumn, nextRow, nextColumn ) {
-		var nextValue = $( '#tile' + nextRow + nextColumn ).html();
-		var currentValue = $( '#tile' + currentRow + currentColumn ).html();
+		var nextValue = table[nextRow] === undefined ? null : table[ nextRow ][ nextColumn ];
+		var currentValue = table[ currentRow ][ currentColumn ];
 		if( nextValue == currentValue ) {
-			var valueAfterMerge = $( '#tile' + nextRow + nextColumn ).html( parseInt( nextValue ) * 2 ).html();
-			$( '#tile' + currentRow + currentColumn ).empty();
+			var valueAfterMerge = table[ nextRow ][ nextColumn ] * 2
+			table[ nextRow ][ nextColumn ] = valueAfterMerge;
+			table[ currentRow ][ currentColumn ] = null;
 
-			addTileColour( nextRow, nextColumn );
-			addTileColour( currentRow, currentColumn );
 			addCurrentScore( valueAfterMerge );
 			isChanged = true;
 		}
@@ -310,14 +344,14 @@ $( document ).ready( function () {
 	/**
 	 * Change colour of tile.
 	 * Remove CSS class and add another one connected with value.
-	 * @param i the row
-	 * @param j the column
+	 * @param row the row of tile to check
+	 * @param column the column of tile to check
 	 */
-	function addTileColour( i, j ) {
-		$( '#tile' + i + j ).removeClass();
-		var tileValue = $( '#tile' + i + j ).html();
-		if( !isEmptyTile( i, j ) ) {
-			$( '#tile' + i + j ).addClass( 'colour' + tileValue );
+	function addTileColour( row, column ) {
+		$( '#tile' + row + column ).removeClass();
+		var tileValue = table[ row ][ column ];
+		if( !isEmptyTile( row, column ) ) {
+			$( '#tile' + row + column ).addClass( 'colour' + tileValue );
 		}
 	}
 
@@ -348,7 +382,7 @@ $( document ).ready( function () {
 	 * @returns boolean value
 	 */
 	function isPossibleMerge( row, column ) {
-		var centerVal = $( '#tile' + row + column ).html();
+		var centerVal = table[ row ][ column ];
 		return $.inArray( centerVal, getNextValues( row, column ) ) != -1;
 	}
 	
@@ -359,11 +393,12 @@ $( document ).ready( function () {
 	 * @returns array with values
 	 */
 	function getNextValues( row, column ) {
-		var leftVal = $( '#tile' + row + parseInt( column - 1 ) ).html();
-		var upVal = $( '#tile' + parseInt( row - 1 ) + column ).html();
-		var rightVal = $( '#tile' + row + parseInt( column + 1 ) ).html();
-		var downVal = $( '#tile' + parseInt( row + 1 ) + column ).html();
-		return new Array( leftVal, upVal, rightVal, downVal );
+		var leftVal = table[ row ][ column -1 ];
+		var rightVal = table[ row ][ column + 1 ];
+		 //the same problem like in isEmptyTile
+		var upVal = table[ row - 1 ] === undefined ? undefined: table[ row - 1 ][ column ];
+		var downVal = table[ row + 1 ] === undefined ? undefined : table[ row + 1 ][ column ];
+		return [ leftVal, rightVal, upVal, downVal ];
 	}
 	
 	/*************************
@@ -371,16 +406,20 @@ $( document ).ready( function () {
 	 ************************/
 	
 	function restoreData() {
-		var dataToRestore = '2;8;16;32;64;128;256;512;1024;2048;;;;;;';
+		var dataToRestore = '2;8;16;32;64;128;256;512;1024;2048;null;null;null;null;null;null';
 		var dataArray = dataToRestore.split( ';' );
 		var i = 0;
 		for( var row = 1; row <= tableSize; row++ ) {
 			for( var column = 1; column <= tableSize; column++ ) {
-				$( '#tile' + row + column ).html( dataArray[ i ] );
-				addTileColour( row, column );
+				if( dataArray[ i ] === 'null' ) {
+					table[ row ][ column ] = null;
+				} else {
+					table[ row ][ column ] = dataArray[ i ];
+				}
 				i++;
 			}
 		}
+		refreshHTML();
 	}
 
 	/**
@@ -411,7 +450,7 @@ $( document ).ready( function () {
 		var values = '';
 		for( var row = 1; row <= tableSize; row++ ) {
 			for( var column = 1; column <= tableSize; column++ ) {
-				var value = $( '#tile' + row + column).html();
+				var value = table[ row ][ column ];
 				values += value + ';';
 			}
 		}
