@@ -1,13 +1,5 @@
 $( document ).ready( function () {
 
-	/**
-	 * TODO list with order:
-	 * - Add correct CSS (only for mobile version):
-	 * 		- add classes .small, .medium and .big for table (different size of 'td' elements).
-	 * - add link to github and portfolio page in the footer
-	 * - Spend more time on game and fix bugs.
-	 */
-	
 	/*************************
 	 * CONFIGURATION
 	 ************************/
@@ -52,6 +44,7 @@ $( document ).ready( function () {
 	 * Clear values from table array.
 	 */
 	function clearTable() {
+		table = [];
 		for( var row = 1; row <= tableSize; row++ ) {
 			table[ row ] = [];
 			for( var column = 1; column <= tableSize; column++ ) {
@@ -179,7 +172,7 @@ $( document ).ready( function () {
 	 */
 	$( '.size' ).on( 'click', function( e ) {
 		if( confirm( 'Are you sure to change size of table? Table needs to be reload and you will lose your current game' ) ) {
-			tableSize = $( this ).attr( 'value' );
+			tableSize = parseInt( $( this ).attr( 'value' ) );
 			$( '.message' ).empty();
 			init();	
 		}

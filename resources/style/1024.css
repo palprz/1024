@@ -16,7 +16,7 @@ header {
 }
 
 .header-container {
-	max-width: 30em;
+	max-width: 35em;
 	margin: 0 auto;
 }
 
@@ -70,6 +70,10 @@ td {
 .colour2048 { background-color: #003399; color: #000; }
 .colour4096, .colour8192, .colour16384, .colour32768, .colour65536 { background-color: #000; color: #fff; }
 
+.message {
+	color: red;
+	font-weight: bold;
+}
 
 .button {
 	background-color: #eee;
@@ -83,4 +87,12 @@ td {
 	background-color: #aaa;
 	color: #fff;
 	cursor: pointer;
+}
+
+footer a {
+	color: red;
+}
+
+footer a:hover {
+	color: blue;
 }
