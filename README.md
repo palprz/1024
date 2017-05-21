@@ -1,4 +1,7 @@
-1024 [November 2016] by Przemyslaw Paluch
+## 1024 [November 2016] by Przemyslaw Paluch
+
+Copy made in javascript of popular game on mobile phones: 1024.
+Screenshot from the game:
 
 ![screen_1024][screen_1024]
 
