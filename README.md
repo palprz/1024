@@ -8,8 +8,3 @@ Popular mobile simple game copied in javascript.
 
 ## Link to the application
 https://rawgit.com/palprz/1024/master/index.html
-
-## Screenshot
-Screenshot from the game:
-
-![screen_1024] [https://github.com/palprz/1024/blob/master/github-screenshots/screen_1024.png]
