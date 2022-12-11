@@ -2,7 +2,7 @@
 Popular mobile simple game copied in javascript.
 
 ## Screenshots from running apps
-[Screenshot with example of the page gameplay](screenshots/running_app.png)
+![Screenshot with example of the page gameplay](screenshots/running_app.png)
 
 ## Technologies
 - HTML5
