@@ -1,12 +1,14 @@
-## 1024 [November 2016]
+## 1024
 Popular mobile simple game copied in javascript.
+
+## Screenshots from running apps
+[Screenshot with example of the page gameplay](screenshots/running_app.png)
 
 ## Technologies
 - HTML5
 - CSS3
 - Javascript
 
-## Link to demo of application
-Can take 30 seconds to run application on Heroku (sorry, free version got some disadvantage!):
+## How to run
 
-https://palprz-1024.herokuapp.com/
+Open in browser `index.html` file.
